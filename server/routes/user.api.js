@@ -11,6 +11,13 @@ const router = express.Router();
 router.post("/", userController.register);
 
 /**
+ * @route GET api/users/me
+ * @description Return current user info
+ * @access Access Token required
+ */
+router.get("/me", authMiddleware.loginRequired, userController.getCurrentUser);
+
+/**
  * @route GET api/users/:id/messages
  * @description Return list of messages sent to current user
  * @access Public

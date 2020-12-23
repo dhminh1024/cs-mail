@@ -45,10 +45,41 @@ const sendMessage = ({ from, to, title, body }) => async (dispatch) => {
   }
 };
 
+const updateMessage = ({ message, currentUserId }) => async (dispatch) => {
+  dispatch({ type: types.UPDATE_MSG_REQUEST, payload: null });
+  try {
+    const res = await api.put(`/messages`, message);
+    dispatch({ type: types.UPDATE_MSG_SUCCESS, payload: res.data.data });
+    dispatch(getReceivedMessages(currentUserId));
+  } catch (error) {
+    dispatch({ type: types.UPDATE_MSG_FAILURE, payload: error });
+  }
+};
+
+const getCurrentUser = (accessToken) => async (dispatch) => {
+  dispatch({ type: types.GET_CURRENT_USER_REQUEST, payload: null });
+  try {
+    api.defaults.headers.common["authorization"] = accessToken;
+    const res = await api.get(`/users/me`);
+    dispatch({ type: types.GET_CURRENT_USER_SUCCESS, payload: res.data.data });
+  } catch (error) {
+    dispatch({ type: types.GET_CURRENT_USER_FAILURE, payload: error });
+  }
+};
+
+const logout = () => (dispatch) => {
+  localStorage.removeItem("accessToken");
+  delete api.defaults.headers.common["authorization"];
+  dispatch({ type: types.LOGOUT_REQUEST, payload: null });
+};
+
 const authActions = {
   loginRequest,
   register,
   getReceivedMessages,
   sendMessage,
+  getCurrentUser,
+  logout,
+  updateMessage,
 };
 export default authActions;

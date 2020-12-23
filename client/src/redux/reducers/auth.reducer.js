@@ -44,6 +44,28 @@ const authReducer = (state = initialState, action) => {
     case types.SEND_MSG_FAILURE:
       return { ...state, loading: false };
 
+    case types.GET_CURRENT_USER_REQUEST:
+      return { ...state, loading: true };
+    case types.GET_CURRENT_USER_SUCCESS:
+      return {
+        ...state,
+        user: payload.user,
+        loading: false,
+        isAuthenticated: true,
+      };
+    case types.GET_CURRENT_USER_FAILURE:
+      return { ...state, loading: false, isAuthenticated: false };
+
+    case types.LOGOUT_REQUEST:
+      return { ...initialState, isAuthenticated: false };
+
+    case types.UPDATE_MSG_REQUEST:
+      return { ...state, loading: true };
+    case types.UPDATE_MSG_SUCCESS:
+      return { ...state, loading: false };
+    case types.UPDATE_MSG_FAILURE:
+      return { ...state, loading: false };
+
     default:
       return state;
   }

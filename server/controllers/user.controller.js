@@ -27,8 +27,17 @@ userController.getMessagesOfUser = async (req, res, next) => {
     const userId = req.params.id;
     let user = await User.findById(userId);
     if (!user) return next(new Error("404 - User not found"));
-
-    const messages = await Message.find({ to: userId }).populate("from");
+    let messages;
+    if (user.role !== "admin") {
+      messages = await Message.find({ to: userId })
+        .populate("from")
+        .sort("-createdAt");
+    } else if (user.role === "admin") {
+      messages = await Message.find()
+        .populate("from")
+        .populate("to")
+        .sort("-createdAt");
+    }
 
     utilsHelper.sendResponse(
       res,
@@ -37,6 +46,24 @@ userController.getMessagesOfUser = async (req, res, next) => {
       { messages },
       null,
       "Get messages success"
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+userController.getCurrentUser = async (req, res, next) => {
+  try {
+    const currentUserId = req.userId;
+    const user = await User.findById(currentUserId);
+    if (!user) return next(new Error("401 - User not found"));
+    utilsHelper.sendResponse(
+      res,
+      200,
+      true,
+      { user },
+      null,
+      "Get current user success"
     );
   } catch (error) {
     next(error);

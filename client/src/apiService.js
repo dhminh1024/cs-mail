@@ -26,7 +26,11 @@ api.interceptors.response.use(
     console.log("Response:", response);
     if (response.data.data?.accessToken) {
       api.defaults.headers.common["authorization"] =
-        "Bearer " + response.data.data?.accessToken;
+        "Bearer " + response.data.data.accessToken;
+      localStorage.setItem(
+        "accessToken",
+        "Bearer " + response.data.data.accessToken
+      );
     }
     return response;
   },

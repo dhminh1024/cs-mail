@@ -29,6 +29,32 @@ messageController.sendMessage = async (req, res, next) => {
   }
 };
 
+messageController.updateMessage = async (req, res, next) => {
+  try {
+    const currentUserId = req.userId;
+    const message = req.body;
+
+    if (!message._id) return next(new Error("404 - Message not found"));
+    let msg = await Message.findOneAndUpdate(
+      { _id: message._id },
+      { ...message },
+      { new: true }
+    );
+    if (!msg) return next(new Error("404 - Message not found"));
+
+    utilsHelper.sendResponse(
+      res,
+      200,
+      true,
+      { msg },
+      null,
+      "Update Message success"
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 messageController.getListOfMessage = async (req, res, next) => {
   try {
     let { page, limit } = req.query;

@@ -7,6 +7,7 @@ const messageSchema = Schema(
     to: { type: Schema.ObjectId, required: true, ref: "User" },
     title: { type: String, required: true },
     body: { type: String, required: true },
+    status: { type: String, enum: ["seen", "unseen"] },
   },
   {
     timestamps: true,
