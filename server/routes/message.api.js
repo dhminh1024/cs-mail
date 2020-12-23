@@ -1,5 +1,6 @@
 const express = require("express");
 const messageController = require("../controllers/message.controller");
+const authMiddleware = require("../middlewares/authentication");
 const router = express.Router();
 
 /**
@@ -14,7 +15,11 @@ router.post("/", messageController.sendMessage);
  * @description User can get a list of messages
  * @access Public
  */
-router.get("/", messageController.getListOfMessage);
+router.get(
+  "/",
+  authMiddleware.loginRequired,
+  messageController.getListOfMessage
+);
 
 /**
  * @route GET api/messages/:id

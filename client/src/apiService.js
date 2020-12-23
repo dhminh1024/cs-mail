@@ -24,6 +24,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     console.log("Response:", response);
+    if (response.data.data?.accessToken) {
+      api.defaults.headers.common["authorization"] =
+        "Bearer " + response.data.data?.accessToken;
+    }
     return response;
   },
   function (error) {

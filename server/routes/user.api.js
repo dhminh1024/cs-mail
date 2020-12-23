@@ -1,5 +1,6 @@
 const express = require("express");
 const userController = require("../controllers/user.controller");
+const authMiddleware = require("../middlewares/authentication");
 const router = express.Router();
 
 /**
@@ -14,6 +15,10 @@ router.post("/", userController.register);
  * @description Return list of messages sent to current user
  * @access Public
  */
-router.get("/:id/messages", userController.getMessagesOfUser);
+router.get(
+  "/:id/messages",
+  authMiddleware.loginRequired,
+  userController.getMessagesOfUser
+);
 
 module.exports = router;
